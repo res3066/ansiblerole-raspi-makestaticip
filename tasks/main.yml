@@ -1,0 +1,20 @@
+---
+
+#  - template: src=interfaces.j2 dest=/etc/network/interfaces mode=0644 owner=root group=root
+
+#  - template: src=dhclient.conf.j2 dest=/etc/dhcp/dhclient.conf mode=0644 owner=root group=root
+
+# why is this not provided as facts from setup?
+
+  - command: python -c 'netmask="{{ ansible_default_ipv4.netmask }}" ; print sum([bin(int(x)).count("1") for x in netmask.split(".")])'
+    register: convertedcidr
+
+  - debug:
+      msg: "CIDR netmask appears to be {{ convertedcidr.stdout }}"
+
+  - template: src=dhcpcd.conf.j2 dest=/etc/dhcpcd.conf mode=0644 owner=root group=root
+
+#  - systemd: name=dhcpcd.service enabled=no state=stopped
+
+...
+

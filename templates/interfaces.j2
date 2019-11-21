@@ -1,0 +1,17 @@
+auto lo
+
+iface lo inet loopback
+
+iface eth0 inet static
+	address {{ ansible_default_ipv4.address }}
+	netmask {{ ansible_default_ipv4.netmask }}
+	gateway {{ ansible_default_ipv4.gateway }}
+	dns-nameservers {{ ansible_dns.nameservers[0] }}
+
+iface eth0 inet6 static
+        pre-up modprobe ipv6
+        address {{ ansible_default_ipv6.address }}
+        netmask {{ ansible_default_ipv6.prefix }}
+        gateway {{ ansible_default_ipv6.gateway }}
+
+iface default inet dhcp
